@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Editor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            box-sizing: border-box;
+        }
+        body {
+            display: flex;
+            width: 100%;
+            height: 100vh;
+            background-color: #f5f5f5;
+        }
+        .leftpart {
+            flex-basis: 50%;
+            background-color: #2d2d2d;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+        .rightpart {
+            flex-basis: 50%;
+            background-color: #f5f5f5;
+            height: 100%;
+            padding: 20px;
+        }
+        .content {
+            flex-basis: 33.33%;
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+        .leftpart .content label {
+            background-color: #007acc;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+            border-radius: 5px 5px 0 0;
+        }
+        .leftpart .content textarea {
+            width: 100%;
+            outline: none;
+            background-color: #2d2d2d;
+            border: 1px solid #007acc;
+            border-radius: 0 0 5px 5px;
+            color: white;
+            padding: 10px;
+            height: calc(100% - 40px);
+            resize: none;
+        }
+        .leftpart .content textarea::placeholder {
+            color: #aaa;
+        }
+        .rightpart label {
+            background-color: #007acc;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            border-radius: 5px 5px 0 0;
+        }
+        .rightpart iframe {
+            display: block;
+            width: 100%;
+            height: calc(100% - 40px);
+            border: 1px solid #007acc;
+            border-radius: 0 0 5px 5px;
+        }
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+        .buttons button {
+            padding: 10px 20px;
+            background-color: #007acc;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .buttons button:hover {
+            background-color: #005f99;
+        }
+    </style>
+</head>
+<body>
+    <div class="leftpart">
+        <div class="content">
+            <label>HTML</label>
+            <textarea placeholder="Enter HTML code here..."></textarea>
+        </div>
+        <div class="content">
+            <label>CSS</label>
+            <textarea placeholder="Enter CSS code here..."></textarea>
+        </div>
+        <div class="content">
+            <label>JS</label>
+            <textarea placeholder="Enter JavaScript code here..."></textarea>
+        </div>
+        <div class="buttons">
+            <button id="run">Run</button>
+            <button id="clear">Clear</button>
+        </div>
+    </div>
+    <div class="rightpart">
+        <label>Output</label>
+        <iframe id="Output"></iframe>
+    </div>
+    <script>
+        let Output = document.querySelector('#Output');
+        let allInput = document.querySelectorAll('.leftpart textarea');
+        let runButton = document.getElementById('run');
+        let clearButton = document.getElementById('clear');
+
+        let htmlCode = '', cssCode = '', jsCode = '';
+        runButton.addEventListener('click', () => {
+            htmlCode = allInput[0].value;
+            cssCode = allInput[1].value;
+            jsCode = allInput[2].value;
+
+            Output.contentDocument.body.innerHTML = htmlCode;
+            let styleTag = Output.contentDocument.createElement('style');
+            styleTag.innerHTML = cssCode;
+            Output.contentDocument.head.innerHTML = '';
+            Output.contentDocument.head.appendChild(styleTag);
+            Output.contentWindow.eval(jsCode);
+        });
+
+        clearButton.addEventListener('click', () => {
+            allInput.forEach(textarea => textarea.value = '');
+            Output.contentDocument.body.innerHTML = '';
+            Output.contentDocument.head.innerHTML = '';
+        });
+    </script>
+</body>
+</html>
